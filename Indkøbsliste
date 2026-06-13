@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🛒 Louises Indkøb</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #f0faf2 0%, #e8f5eb 100%);
+    min-height: 100vh;
+    padding: 16px;
+    color: #3a4a3c;
+  }
+  h1 { text-align: center; font-size: 1.6rem; font-weight: 800; color: #4a8c5c; margin-bottom: 4px; }
+  .subtitle { text-align: center; font-size: 0.85rem; color: #8aaa90; margin-bottom: 16px; }
+  .formular {
+    background: white; border-radius: 18px; padding: 16px;
+    box-shadow: 0 2px 12px rgba(100,170,120,0.13); margin-bottom: 16px;
+  }
+  .formular-titel { font-weight: 700; font-size: 0.9rem; color: #4a8c5c; margin-bottom: 10px; }
+  .form-raekke { display: flex; gap: 8px; flex-wrap: wrap; }
+  .form-raekke input, .form-raekke select {
+    flex: 1; min-width: 100px;
+    border: 1.5px solid #c2e0ca; border-radius: 12px;
+    padding: 9px 12px; font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem; color: #3a4a3c; background: #f8fdf9; outline: none;
+  }
+  .form-raekke input:focus, .form-raekke select:focus { border-color: #7dc494; }
+  .antal-input { max-width: 70px; flex: 0 0 70px !important; text-align: center; }
+  .tilfoej-knap {
+    background: linear-gradient(135deg, #7dc494, #4a8c5c);
+    color: white; border: none; border-radius: 12px;
+    padding: 9px 18px; font-family: 'Nunito', sans-serif;
+    font-weight: 700; font-size: 0.9rem; cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+  .tilfoej-knap:hover { opacity: 0.88; transform: scale(1.02); }
+  .tilfoej-knap:active { transform: scale(0.97); }
+  .kategori-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .tab {
+    background: white; border: 1.5px solid #c2e0ca;
+    border-radius: 20px; padding: 5px 13px;
+    font-size: 0.82rem; font-weight: 600; color: #4a8c5c; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab:hover { background: #e8f5eb; }
+  .tab.aktiv { background: #4a8c5c; color: white; border-color: #4a8c5c; }
+  .vare-gruppe { margin-bottom: 14px; }
+  .gruppe-titel {
+    font-size: 0.78rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.08em; color: #8aaa90; margin-bottom: 6px; padding-left: 4px;
+  }
+  .vare-kort {
+    background: white; border-radius: 14px; padding: 11px 14px; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 1px 6px rgba(100,170,120,0.1); transition: opacity 0.2s;
+  }
+  .vare-kort.kroet { opacity: 0.42; text-decoration: line-through; }
+  .check-cirkel {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 2px solid #7dc494; flex-shrink: 0; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; background: white;
+    transition: all 0.2s;
+  }
+  .check-cirkel.tjek { background: linear-gradient(135deg, #7dc494, #4a8c5c); border-color: #4a8c5c; }
+  .check-cirkel .hak { color: white; font-size: 0.85rem; font-weight: 800; display: none; }
+  .check-cirkel.tjek .hak { display: block; }
+  .vare-info { flex: 1; }
+  .vare-navn { font-weight: 700; font-size: 0.95rem; }
+  .vare-meta { font-size: 0.78rem; color: #8aaa90; margin-top: 3px; display: flex; align-items: center; gap: 6px; }
+  .antal-badge {
+    background: #d6f0dc; color: #3a6e48; font-weight: 800;
+    font-size: 0.78rem; border-radius: 20px; padding: 1px 9px;
+    display: inline-block;
+  }
+  .kat-badge {
+    background: #eaf7ec; color: #4a8c5c; font-weight: 700;
+    font-size: 0.78rem; border-radius: 20px; padding: 1px 9px;
+    display: inline-block; border: 1px solid #c2e0ca;
+  }
+  .slet-knap {
+    background: #e8f5eb; border: none; border-radius: 8px;
+    padding: 5px 8px; font-size: 0.8rem; cursor: pointer; color: #4a8c5c;
+    transition: background 0.2s;
+  }
+  .slet-knap:hover { background: #c2e0ca; }
+  .taeller-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    background: white; border-radius: 14px; padding: 10px 16px; margin-bottom: 16px;
+    box-shadow: 0 1px 6px rgba(100,170,120,0.1); font-size: 0.85rem;
+  }
+  .taeller-bar span { color: #8aaa90; }
+  .taeller-bar strong { color: #4a8c5c; font-weight: 800; }
+  .ryd-sektion { text-align: center; margin-top: 8px; margin-bottom: 24px; }
+  .ryd-knap {
+    background: none; border: 1.5px solid #7dc494; border-radius: 20px;
+    padding: 6px 18px; color: #4a8c5c; font-family: 'Nunito', sans-serif;
+    font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: all 0.2s;
+  }
+  .ryd-knap:hover { background: #e8f5eb; }
+  .tom-liste { text-align: center; padding: 30px 20px; color: #a0c0a8; font-size: 0.9rem; }
+  .tom-liste .ikon { font-size: 2.5rem; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<h1>🛒 Indkøbsliste</h1>
+<p class="subtitle">Tryk på cirklen når varen er i kurven ✓</p>
+<div class="formular">
+  <div class="formular-titel">➕ Tilføj vare</div>
+  <div class="form-raekke">
+    <input type="text" id="vare-navn" placeholder="Varenavn..." onkeydown="if(event.key==='Enter')tilfoejVare()">
+    <input type="number" id="vare-antal" class="antal-input" placeholder="Antal" min="1" value="1">
+    <select id="vare-kat">
+      <option value="🌿 Andet">Kategori</option>
+      <option value="🥦 Grønt">🥦 Grønt</option>
+      <option value="🥛 Mejeri">🥛 Mejeri</option>
+      <option value="🥩 Kød">🥩 Kød</option>
+      <option value="🧊 Frost">🧊 Frost</option>
+      <option value="🥫 Kolonial">🥫 Kolonial</option>
+      <option value="🍞 Brød">🍞 Brød</option>
+      <option value="🧴 Rengøring">🧴 Rengøring</option>
+      <option value="🛁 Pleje">🛁 Pleje</option>
+      <option value="🍷 Drikkevarer">🍷 Drikkevarer</option>
+    </select>
+    <button class="tilfoej-knap" onclick="tilfoejVare()">Tilføj ✨</button>
+  </div>
+</div>
+<div class="taeller-bar" id="taeller-bar">
+  <span>0 varer i alt</span><strong>0 i kurven ✓</strong>
+</div>
+<div class="kategori-tabs" id="kategori-tabs">
+  <div class="tab aktiv" onclick="skiftTab('alle',this)">Alle</div>
+</div>
+<div id="vare-liste"></div>
+<div class="ryd-sektion">
+  <button class="ryd-knap" onclick="rydKrydset()">🗑️ Ryd afkrydset</button>
+</div>
+<script>
+  let varer = JSON.parse(localStorage.getItem('indkoeb-varer') || '[]');
+  let aktivTab = 'alle';
+  function gem() { localStorage.setItem('indkoeb-varer', JSON.stringify(varer)); }
+  function tilfoejVare() {
+    const navn = document.getElementById('vare-navn').value.trim();
+    const antal = parseInt(document.getElementById('vare-antal').value) || 1;
+    const kat = document.getElementById('vare-kat').value;
+    if (!navn) return;
+    varer.push({ navn, antal, kat, kroet: false, id: Date.now() });
+    gem();
+    document.getElementById('vare-navn').value = '';
+    document.getElementById('vare-antal').value = '1';
+    document.getElementById('vare-kat').value = '🌿 Andet';
+    vis();
+    document.getElementById('vare-navn').focus();
+  }
+  function toggleKroet(id) {
+    const v = varer.find(v => v.id === id);
+    if (v) { v.kroet = !v.kroet; gem(); vis(); }
+  }
+  function sletVare(id) { varer = varer.filter(v => v.id !== id); gem(); vis(); }
+  function rydKrydset() { varer = varer.filter(v => !v.kroet); gem(); vis(); }
+  function skiftTab(kat, el) {
+    aktivTab = kat;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('aktiv'));
+    el.classList.add('aktiv');
+    vis();
+  }
+  function vis() {
+    const kats = ['alle', ...new Set(varer.map(v => v.kat))];
+    const tabsEl = document.getElementById('kategori-tabs');
+    tabsEl.innerHTML = '';
+    kats.forEach(k => {
+      const d = document.createElement('div');
+      d.className = 'tab' + (k === aktivTab ? ' aktiv' : '');
+      d.textContent = k === 'alle' ? 'Alle' : k;
+      d.onclick = () => skiftTab(k, d);
+      tabsEl.appendChild(d);
+    });
+    const vis_varer = aktivTab === 'alle' ? varer : varer.filter(v => v.kat === aktivTab);
+    const total = varer.length;
+    const kroet = varer.filter(v => v.kroet).length;
+    document.getElementById('taeller-bar').innerHTML =
+      `<span>${total} ${total === 1 ? 'vare' : 'varer'} i alt</span><strong>${kroet} i kurven ✓</strong>`;
+    const grupper = {};
+    vis_varer.forEach(v => { if (!grupper[v.kat]) grupper[v.kat] = []; grupper[v.kat].push(v); });
+    const listeEl = document.getElementById('vare-liste');
+    if (vis_varer.length === 0) {
+      listeEl.innerHTML = `<div class="tom-liste"><div class="ikon">🛒</div>Ingen varer endnu — tilføj noget ovenfor!</div>`;
+      return;
+    }
+    listeEl.innerHTML = Object.entries(grupper).map(([kat, items]) => `
+      <div class="vare-gruppe">
+        <div class="gruppe-titel">${kat}</div>
+        ${items.map(v => `
+          <div class="vare-kort ${v.kroet ? 'kroet' : ''}">
+            <div class="check-cirkel ${v.kroet ? 'tjek' : ''}" onclick="toggleKroet(${v.id})">
+              <span class="hak">✓</span>
+            </div>
+            <div class="vare-info">
+              <div class="vare-navn">${v.navn}</div>
+              <div class="vare-meta"><span class="antal-badge">× ${v.antal}</span> <span class="kat-badge">${v.kat}</span></div>
+            </div>
+            <button class="slet-knap" onclick="sletVare(${v.id})">🗑️</button>
+          </div>
+        `).join('')}
+      </div>
+    `).join('');
+  }
+  vis();
+</script>
+</body>
+</html>
