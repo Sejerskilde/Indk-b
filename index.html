@@ -278,7 +278,8 @@
     document.getElementById('taeller-bar').innerHTML =
       `<span>${total} ${total === 1 ? 'vare' : 'varer'} i alt</span><strong>${kroet} i kurven ✓</strong>`;
     const grupper = {};
-    vis_varer.forEach(v => { if (!grupper[v.kat]) grupper[v.kat] = []; grupper[v.kat].push(v); });
+    const sorteret = [...vis_varer].sort((a, b) => a.kroet - b.kroet);
+    sorteret.forEach(v => { if (!grupper[v.kat]) grupper[v.kat] = []; grupper[v.kat].push(v); });
     const listeEl = document.getElementById('vare-liste');
     if (vis_varer.length === 0) {
       listeEl.innerHTML = `<div class="tom-liste"><div class="ikon">🛒</div>Ingen varer endnu — tilføj noget ovenfor!</div>`;
